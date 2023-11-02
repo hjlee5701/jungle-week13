@@ -13,7 +13,7 @@ public class Board extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long board_id;
+    private Long boardId;
 
     @Column(nullable = false)
     private String title;
@@ -23,5 +23,16 @@ public class Board extends Timestamped {
 
     @Column(nullable = false)
     private String content;
+
+    public Board(String title, String writer, String content) {
+        this.title = title;
+        this.writer = writer;
+        this.content = content;
+    }
+
+    public void updateBoard(String title, String content){
+        this.title = title;
+        this.content = content;
+    }
 
 }

@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/jungle_test?serverTimezone=UTC&characterEncoding=UTF-8
+    username: eddi
+    password: eddi@123
+
+  jpa:
+    open-in-view: true
+    database: mysql
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
