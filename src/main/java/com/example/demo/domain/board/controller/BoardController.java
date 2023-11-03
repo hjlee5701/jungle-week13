@@ -12,19 +12,17 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/board")
+@RequestMapping(value = "/board", method = {RequestMethod.GET, RequestMethod.POST})
 @RequiredArgsConstructor
 public class BoardController {
 
     private final BoardService boardService;
 
-    @PostMapping(value = "/register")
-    public void registerBoard(@RequestBody BoardRequest registerReq){
-        Boolean isRegister = boardService.registerBoard(registerReq);
-        if (isRegister)
-            log.info("등록되었습니다.");
-        else
-            log.info("등록 실패..");
+    @PostMapping
+    public Board registerBoard(@RequestBody BoardRequest registerReq) {
+
+        return boardService.registerBoard(registerReq);
+
     }
 
     @GetMapping("/list")
@@ -33,19 +31,19 @@ public class BoardController {
         return boardService.getBoardList();
     }
 
-    @GetMapping("/detail/{boardId}")
+    @GetMapping("/{boardId}")
     public Board getBoardDetail(@PathVariable("boardId") Long boardId){
 
         return boardService.getBoardDetail(boardId);
     }
 
-    @PutMapping("/update/{boardId}")
+    @PutMapping("/{boardId}")
     public void updateBoard( @PathVariable("boardId") Long boardId,
                              @RequestBody BoardRequest updateReq ){
         boardService.updateBoard(boardId, updateReq);
     }
 
-    @DeleteMapping("/delete/{boardId}")
+    @DeleteMapping("/{boardId}")
     public void deleteBoard(@PathVariable("boardId") Long boardId){
         boardService.deleteBoard(boardId);
     }

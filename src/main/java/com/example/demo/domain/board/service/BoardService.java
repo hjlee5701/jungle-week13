@@ -9,7 +9,7 @@ import java.util.List;
 public interface BoardService {
 
     // 게시판 글 등록
-    Boolean registerBoard(BoardRequest registerReq);
+    Board registerBoard(BoardRequest registerReq);
 
     // 모든 게시판들의 리스트 불러오기
     List<BoardList> getBoardList();

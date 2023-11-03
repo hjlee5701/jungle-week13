@@ -6,8 +6,8 @@ import com.example.demo.domain.board.entity.Board;
 import com.example.demo.domain.board.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,19 +18,20 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
 
-    @Autowired
-    BoardRepository boardRepository;
+    private final BoardRepository boardRepository;
 
     private Board getBoardById(Long boardId){
         Optional<Board> board = boardRepository.findById(boardId);
         return board.orElse(null);
     }
     @Override
-    public Boolean registerBoard(BoardRequest registerReq){
+    @Transactional
+    public Board registerBoard(BoardRequest registerReq){
 
         Board board = registerReq.toBoard();
         boardRepository.save(board);
-        return true;
+        log.info("게시글 \" "+registerReq.getTitle()+" \" 이(가) 등록되었습니다.");
+        return board;
     }
 
     @Override
