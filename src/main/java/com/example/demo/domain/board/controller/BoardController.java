@@ -19,7 +19,7 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping
-    public Board registerBoard(@RequestBody BoardRequest registerReq) {
+    public Board registerBoard(@RequestBody @Valid BoardRequest registerReq) {
 
         return boardService.registerBoard(registerReq);
 
@@ -39,7 +39,7 @@ public class BoardController {
 
     @PutMapping("/{boardId}")
     public void updateBoard( @PathVariable("boardId") Long boardId,
-                             @RequestBody BoardRequest updateReq ){
+                             @RequestBody @Valid BoardRequest updateReq ){
         boardService.updateBoard(boardId, updateReq);
     }
 
