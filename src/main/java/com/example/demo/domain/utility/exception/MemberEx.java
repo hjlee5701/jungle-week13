@@ -36,6 +36,9 @@ public class MemberEx extends RuntimeException{
         return new MemberEx("비밀번호가 일치하지 않습니다.");
     }
 
+    public static MemberEx invalidAdminCheck(){
+        return new MemberEx("관리자 확인을 선택해주세요.");
+    }
     public static MemberEx invalidAdminCode(){
         return new MemberEx("관리자 코드가 불일치합니다.");
     }

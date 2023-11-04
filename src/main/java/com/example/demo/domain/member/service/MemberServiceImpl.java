@@ -43,6 +43,9 @@ public class MemberServiceImpl implements MemberService{
             } else {
                 throw MemberEx.invalidAdminCode();
             }
+        // adminCheck = false, adminCode != null
+        } else if (adminCode != null) {
+            throw MemberEx.invalidAdminCheck();
         }
         return UserRoleEnum.USER;
     }
@@ -59,7 +62,6 @@ public class MemberServiceImpl implements MemberService{
         // 암호화 작업
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String secretPw = encoder.encode(signUpReq.getPassword());
-
 
         // 관리자/유저 확인
         UserRoleEnum role = determineUserRole( signUpReq.isAdminCheck(),
