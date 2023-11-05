@@ -6,7 +6,8 @@ public enum ReturnResponse {
     USER_SIGNUP("회원가입에 성공했습니다", HttpStatus.OK),
     ADMIN_SIGNUP("(관리자) 회원가입에 성공했습니다", HttpStatus.OK),
     SIGNIN_SUCCESS("로그인 성공했습니다.", HttpStatus.OK),
-
+    REPLY_DELETE("댓글이 삭제되었습니다.", HttpStatus.OK),
+    BOARD_DELETE("게시글이 삭제되었습니다.", HttpStatus.OK),
     ;
 
 
