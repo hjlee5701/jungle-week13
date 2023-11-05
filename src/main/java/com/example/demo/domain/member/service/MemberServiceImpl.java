@@ -85,7 +85,7 @@ public class MemberServiceImpl implements MemberService{
         // 비밀번호 확인
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if( ! encoder.matches(signUpReq.getPassword(), member.getPassword())) {
-            throw MemberEx.invalidPassword();
+            throw MemberEx.userNotFound();
         }
 
         // HttpServletResponse 에 token 담기
