@@ -1,25 +1,26 @@
 package com.example.demo.domain.board.service;
 
-import com.example.demo.domain.board.dto.BoardList;
-import com.example.demo.domain.board.dto.BoardRequest;
-import com.example.demo.domain.board.entity.Board;
+import com.example.demo.domain.board.dto.BoardRes;
+import com.example.demo.domain.board.dto.BoardAndReplyRes;
+import com.example.demo.domain.board.dto.BoardReq;
+import com.example.demo.domain.utility.response.ReturnResponse;
 
 import java.util.List;
 
 public interface BoardService {
 
     // 게시판 글 등록
-    Board registerBoard(BoardRequest registerReq);
+    BoardRes registerBoard(String username, BoardReq registerReq);
 
     // 모든 게시판들의 리스트 불러오기
-    List<BoardList> getBoardList();
+    List<BoardAndReplyRes> getBoardList();
     
     // 게시글 상세 정보 반환
-    Board getBoardDetail(Long boardId);
+    BoardAndReplyRes getBoardDetail(Long boardId);
 
     // 게시글 수정
-    void updateBoard(Long boardId, BoardRequest updateReq);
+    BoardRes updateBoard(String username, Long boardId, BoardReq updateReq);
 
     // 게시글 삭제
-    void deleteBoard(Long boardId);
+    ReturnResponse deleteBoard(String username, Long boardId);
 }

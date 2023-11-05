@@ -1,6 +1,7 @@
 package com.example.demo.domain.board.entity;
 
-import com.example.demo.utility.Timestamped;
+import com.example.demo.domain.member.entity.Member;
+import com.example.demo.domain.utility.Timestamped;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,21 +20,23 @@ public class Board extends Timestamped {
     private String title;
 
     @Column(nullable = false)
-    private String writer;
-
-    @Column(nullable = false)
     private String content;
 
-    public Board(String title, String writer, String content) {
+    @JoinColumn(name = "member_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
+
+
+    public Board(String title, String content, Member member) {
         this.title = title;
-        this.writer = writer;
         this.content = content;
+        this.member = member;
     }
 
-    public void updateBoard(String title, String writer, String content){
+    public void updateBoard(String title, String content){
         this.title = title;
-        this.writer = writer;
         this.content = content;
+
     }
 
 }

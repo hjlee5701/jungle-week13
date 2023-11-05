@@ -28,7 +28,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<String> handleMemberNotFoundException(MemberEx ex) {
         // 원하는 에러 메시지와 HTTP 상태 코드를 클라이언트에게 반환
         String errorMessage = ex.getMessage();
-        return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
     /**

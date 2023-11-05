@@ -40,6 +40,9 @@ public class SecurityConfig  {
                 .antMatchers("/member/**").permitAll()
                 .antMatchers("/signup").permitAll()
                 .antMatchers("/signin").permitAll()
+                .antMatchers("/board/*").permitAll()
+                .antMatchers("/board/**").permitAll()
+                .antMatchers("/reply/**").permitAll()
                 .anyRequest().authenticated();
         return http.build();
     }
