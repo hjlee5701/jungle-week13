@@ -1,53 +1,66 @@
 package com.example.demo.domain.board.controller;
 
-import com.example.demo.domain.board.dto.BoardList;
-import com.example.demo.domain.board.dto.BoardRequest;
-import com.example.demo.domain.board.entity.Board;
+import com.example.demo.domain.board.dto.BoardRes;
+import com.example.demo.domain.board.dto.BoardAndReplyRes;
+import com.example.demo.domain.board.dto.BoardReq;
 import com.example.demo.domain.board.service.BoardService;
 
+import com.example.demo.domain.utility.jwt.JwtUtil;
+import com.example.demo.domain.utility.response.ReturnResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/board", method = {RequestMethod.GET, RequestMethod.POST})
+@RequestMapping(value = "/board")
 @RequiredArgsConstructor
 public class BoardController {
 
+
     private final BoardService boardService;
+    private final JwtUtil jwt;
+    private ReturnResponse res;
+
 
     @PostMapping
-    public Board registerBoard(@RequestBody @Valid BoardRequest registerReq) {
-
-        return boardService.registerBoard(registerReq);
+    public BoardRes registerBoard(@RequestBody @Valid BoardReq registerReq, HttpServletRequest request){
+//RequestHeader
+        String username = jwt.getUsernameFromRequest(request);
+        return boardService.registerBoard(username, registerReq);
 
     }
 
-    @GetMapping("/list")
-    public List<BoardList> getBoardList(){
+    @GetMapping
+    public List<BoardAndReplyRes> getBoardList(){
 
         return boardService.getBoardList();
     }
 
     @GetMapping("/{boardId}")
-    public Board getBoardDetail(@PathVariable("boardId") Long boardId){
+    public BoardAndReplyRes getBoardDetail(@PathVariable("boardId") Long boardId){
 
         return boardService.getBoardDetail(boardId);
     }
 
     @PutMapping("/{boardId}")
-    public void updateBoard( @PathVariable("boardId") Long boardId,
-                             @RequestBody @Valid BoardRequest updateReq ){
-        boardService.updateBoard(boardId, updateReq);
+    public BoardRes updateBoard( @PathVariable("boardId") Long boardId,
+                             @RequestBody @Valid BoardReq updateReq, HttpServletRequest request){
+        String username = jwt.getUsernameFromRequest(request);
+        return boardService.updateBoard(username, boardId, updateReq);
     }
 
     @DeleteMapping("/{boardId}")
-    public void deleteBoard(@PathVariable("boardId") Long boardId){
-        boardService.deleteBoard(boardId);
+    public ResponseEntity<String> deleteBoard(@PathVariable("boardId") Long boardId, HttpServletRequest request){
+        String username = jwt.getUsernameFromRequest(request);
+        ReturnResponse res =
+                boardService.deleteBoard(username, boardId);
+        return new ResponseEntity<>(res.getMessage(), res.getStatus());
     }
 
 

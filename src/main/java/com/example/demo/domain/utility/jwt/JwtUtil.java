@@ -1,6 +1,7 @@
 package com.example.demo.domain.utility.jwt;
 
 import com.example.demo.domain.member.entity.UserRoleEnum;
+import com.example.demo.domain.utility.exception.MemberEx;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
@@ -111,6 +112,26 @@ public class JwtUtil {
     // 토큰에서 사용자 정보 가져오기
      public Claims getUserInfoFromToken(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+    }
+
+    /**
+     * HttpServletRequest 에서 얻는 Token 으로 사용자아이디 반환하는 메서드
+     * @param request
+     * @return username From Token
+     */
+    public String getUsernameFromRequest(HttpServletRequest request){
+//        TODO: private 으로 수정
+         // 토큰 찾기
+         String token = resolveToken(request);
+
+         // 유효한 토큰인지 확인
+         if( ! validateToken(token)){
+             throw MemberEx.invalidToken();
+         }
+         
+         // 토큰 반환
+        String res = getUserInfoFromToken(token).getSubject();
+         return getUserInfoFromToken(token).getSubject();
     }
 
 }
