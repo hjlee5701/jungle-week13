@@ -1,7 +1,8 @@
 package com.example.demo.domain.utility.jwt;
 
 import com.example.demo.domain.member.entity.UserRoleEnum;
-import com.example.demo.domain.utility.exception.MemberEx;
+import com.example.demo.domain.utility.exception.errorCode.MemberErrorCode;
+import com.example.demo.domain.utility.exception.exception.RestApiException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
@@ -12,10 +13,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
+
 
 @Slf4j
 @Component
@@ -61,12 +62,11 @@ public class JwtUtil {
      *  Header 에서 Token 가져오기
      */
     // header 토큰을 가져오기
-    public String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+    public String resolveToken(String bearerToken) {
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
             return bearerToken.substring(7);
         }
-        return null;
+        throw new RestApiException(MemberErrorCode.INVALID_TOKEN);
     }
 
     /**
@@ -90,10 +90,9 @@ public class JwtUtil {
      * JWT 검증
      */
     // 토큰 검증
-    public boolean validateToken(String token) {
+    public String validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return true;
+            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getSubject();
         } catch (SecurityException | MalformedJwtException e) {
             log.info("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
         } catch (ExpiredJwtException e) {
@@ -103,8 +102,9 @@ public class JwtUtil {
         } catch (IllegalArgumentException e) {
             log.info("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
         }
-        return false;
+        throw new RestApiException(MemberErrorCode.INVALID_TOKEN);
     }
+
 
     /**
      * JWT 에서 사용자 정보 가져오기
@@ -116,22 +116,15 @@ public class JwtUtil {
 
     /**
      * HttpServletRequest 에서 얻는 Token 으로 사용자아이디 반환하는 메서드
-     * @param request
+     * @param bearerToken
      * @return username From Token
      */
-    public String getUsernameFromRequest(HttpServletRequest request){
-//        TODO: private 으로 수정
+    public String getUsernameFromToken(String bearerToken)  {
          // 토큰 찾기
-         String token = resolveToken(request);
-
+         String token = resolveToken(bearerToken);
          // 유효한 토큰인지 확인
-         if( ! validateToken(token)){
-             throw MemberEx.invalidToken();
-         }
-         
-         // 토큰 반환
-        String res = getUserInfoFromToken(token).getSubject();
-         return getUserInfoFromToken(token).getSubject();
+         return validateToken(token);
+
     }
 
 }

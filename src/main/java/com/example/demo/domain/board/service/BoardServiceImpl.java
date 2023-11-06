@@ -10,8 +10,9 @@ import com.example.demo.domain.board.repository.BoardRepository;
 import com.example.demo.domain.board.repository.ReplyRepository;
 import com.example.demo.domain.member.entity.Member;
 import com.example.demo.domain.utility.CommonService;
-import com.example.demo.domain.utility.exception.BoardEx;
-import com.example.demo.domain.utility.response.ReturnResponse;
+import com.example.demo.domain.utility.exception.exception.RestApiException;
+import com.example.demo.domain.utility.response.SuccessResponse;
+import com.example.demo.domain.utility.exception.errorCode.BoardErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.example.demo.domain.utility.response.ReturnResponse.BOARD_DELETE;
+import static com.example.demo.domain.utility.response.responseEnum.BOARD_DELETE;
 
 @Slf4j
 @Service
@@ -35,7 +36,10 @@ public class BoardServiceImpl implements BoardService {
     public Board getBoardById(Long boardId){
         Optional<Board> isBoard = boardRepository.findById(boardId);
         if(isBoard.isEmpty()){
-            throw BoardEx.boardNotFound();
+
+
+            throw new RestApiException(BoardErrorCode.BOARD_NOT_FOUND);
+
         }
         return isBoard.get();
     }
@@ -54,7 +58,7 @@ public class BoardServiceImpl implements BoardService {
     }
     @Override
     @Transactional
-    public BoardRes registerBoard(String username, BoardReq registerReq){
+    public BoardRes registerBoard(String username, BoardReq registerReq)  {
         // 회원 여부 확인
         Member reqMember = common.getMemberByUsername(username);
         
@@ -100,7 +104,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public BoardRes updateBoard(String username, Long boardId, BoardReq updateReq) {
+    public BoardRes updateBoard(String username, Long boardId, BoardReq updateReq)  {
         Member reqMember = common.getMemberByUsername(username);
 
         Board board = getBoardById(boardId);
@@ -115,7 +119,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public ReturnResponse deleteBoard(String username, Long boardId) {
+    public SuccessResponse deleteBoard(String username, Long boardId)  {
         Member reqMember = common.getMemberByUsername(username);
 
         Board board = getBoardById(boardId);
@@ -123,7 +127,8 @@ public class BoardServiceImpl implements BoardService {
         common.checkWriterOrAdmin(reqMember, board.getMember());
 
         boardRepository.deleteById(boardId);
-        return BOARD_DELETE;
+
+        return new SuccessResponse(BOARD_DELETE);
     }
 
 

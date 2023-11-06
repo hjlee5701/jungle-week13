@@ -2,13 +2,13 @@ package com.example.demo.domain.member.service;
 
 import com.example.demo.domain.member.dto.MemberSignInRequest;
 import com.example.demo.domain.member.dto.MemberSignUpRequest;
-import com.example.demo.domain.utility.response.ReturnResponse;
+import com.example.demo.domain.utility.response.SuccessResponse;
 
 import javax.servlet.http.HttpServletResponse;
 
 public interface MemberService {
-    ReturnResponse signUp(MemberSignUpRequest signUpReq);
+    SuccessResponse signUp(MemberSignUpRequest signUpReq);
 
-    ReturnResponse signIn(MemberSignInRequest signUpReq, HttpServletResponse response);
+    SuccessResponse signIn(MemberSignInRequest signUpReq, HttpServletResponse response) ;
 
 }

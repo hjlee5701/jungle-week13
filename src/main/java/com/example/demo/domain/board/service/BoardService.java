@@ -3,7 +3,7 @@ package com.example.demo.domain.board.service;
 import com.example.demo.domain.board.dto.BoardRes;
 import com.example.demo.domain.board.dto.BoardAndReplyRes;
 import com.example.demo.domain.board.dto.BoardReq;
-import com.example.demo.domain.utility.response.ReturnResponse;
+import com.example.demo.domain.utility.response.SuccessResponse;
 
 import java.util.List;
 
@@ -22,5 +22,5 @@ public interface BoardService {
     BoardRes updateBoard(String username, Long boardId, BoardReq updateReq);
 
     // 게시글 삭제
-    ReturnResponse deleteBoard(String username, Long boardId);
+    SuccessResponse deleteBoard(String username, Long boardId);
 }

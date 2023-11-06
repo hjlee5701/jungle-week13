@@ -3,8 +3,9 @@ package com.example.demo.domain.utility;
 import com.example.demo.domain.member.entity.Member;
 import com.example.demo.domain.member.entity.UserRoleEnum;
 import com.example.demo.domain.member.repository.MemberRepository;
-import com.example.demo.domain.utility.exception.BoardEx;
-import com.example.demo.domain.utility.exception.MemberEx;
+import com.example.demo.domain.utility.exception.errorCode.BoardErrorCode;
+import com.example.demo.domain.utility.exception.errorCode.MemberErrorCode;
+import com.example.demo.domain.utility.exception.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +19,10 @@ public class CommonServiceImpl implements CommonService{
     private final MemberRepository memberRepository;
 
     @Override
-    public Member getMemberByUsername(String username ){
+    public Member getMemberByUsername(String username ) {
         Optional<Member> isMember = memberRepository.findByUsername(username);
         if(isMember.isEmpty()){
-            throw MemberEx.userNotFound();
+            throw new RestApiException(MemberErrorCode.USER_NOT_FOUND);
         }
         return isMember.get();
     }
@@ -32,7 +33,7 @@ public class CommonServiceImpl implements CommonService{
         if(UserRoleEnum.USER == reqMember.getRole()){
             // 작성자와 요청한 회원이 같은지 확인
             if(writer != reqMember){
-                throw BoardEx.notWriter();
+                throw new RestApiException(BoardErrorCode.WRITER_NOT_FOUND);
             }
         }
     }

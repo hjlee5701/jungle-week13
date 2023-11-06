@@ -8,8 +8,10 @@ import com.example.demo.domain.board.repository.BoardRepository;
 import com.example.demo.domain.board.repository.ReplyRepository;
 import com.example.demo.domain.member.entity.Member;
 import com.example.demo.domain.utility.CommonService;
-import com.example.demo.domain.utility.exception.BoardEx;
-import com.example.demo.domain.utility.response.ReturnResponse;
+import com.example.demo.domain.utility.exception.exception.RestApiException;
+import com.example.demo.domain.utility.response.SuccessResponse;
+import com.example.demo.domain.utility.response.responseEnum;
+import com.example.demo.domain.utility.exception.errorCode.BoardErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,7 +30,7 @@ public class ReplyServiceImpl implements ReplyService{
     private Board getBoardByBoardId(Long boardId){
         Optional<Board> isBoard = boardRepository.findById(boardId);
         if(isBoard.isEmpty()){
-            throw BoardEx.boardNotFound();
+            throw new RestApiException(BoardErrorCode.BOARD_NOT_FOUND);
         }
         return isBoard.get();
     }
@@ -52,7 +54,7 @@ public class ReplyServiceImpl implements ReplyService{
 
 
     @Override
-    public ReplyRes updateBoard(String username, Long replyId, ReplyReq updateReq){
+    public ReplyRes updateBoard(String username, Long replyId, ReplyReq updateReq) {
 
         // 회원 정보 가져오기
         Member reqMember = common.getMemberByUsername(username);
@@ -63,7 +65,7 @@ public class ReplyServiceImpl implements ReplyService{
         // 댓글 찾기
         Optional<Reply> isReply = replyRepository.findById(replyId);
         if(isReply.isEmpty()){
-            throw BoardEx.replyNotFound();
+            throw new RestApiException(BoardErrorCode.REPLY_NOT_FOUND);
         }
         Reply reply = isReply.get();
         log.info(reply.getMember().getUsername());
@@ -80,7 +82,7 @@ public class ReplyServiceImpl implements ReplyService{
     }
 
     @Override
-    public ReturnResponse deleteReply(String username, Long replyId){
+    public SuccessResponse deleteReply(String username, Long replyId) {
 
         // 회원 정보 가져오기
         Member reqMember = common.getMemberByUsername(username);
@@ -89,7 +91,7 @@ public class ReplyServiceImpl implements ReplyService{
         Optional<Reply> isReply =
                 replyRepository.findById(replyId);
         if(isReply.isEmpty()){
-            throw BoardEx.replyNotFound();
+            throw new RestApiException(BoardErrorCode.REPLY_NOT_FOUND);
         }
 
         // 댓글 작성자와 로그인한 회원이 같은지 확인
@@ -97,7 +99,7 @@ public class ReplyServiceImpl implements ReplyService{
 
         // 삭제 성공
         replyRepository.deleteById(replyId);
-        return ReturnResponse.REPLY_DELETE;
+        return new SuccessResponse(responseEnum.REPLY_DELETE);
     }
 
 
