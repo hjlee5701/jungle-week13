@@ -60,7 +60,7 @@ public class ReplyServiceImpl implements ReplyService{
         Member reqMember = common.getMemberByUsername(username);
 
         // 게시글의 db 저장 유무 확인
-        getBoardByBoardId(updateReq.getBoardId());
+        Board board = getBoardByBoardId(updateReq.getBoardId());
         
         // 댓글 찾기
         Optional<Reply> isReply = replyRepository.findById(replyId);
@@ -78,6 +78,10 @@ public class ReplyServiceImpl implements ReplyService{
 
         // 수정한 댓글 저장
         replyRepository.save(reply);
+
+        board.getReplies().add(reply);
+        boardRepository.save(board);
+
         return new ReplyRes(reply.getReplyId(), reply.getContent());
     }
 
@@ -95,7 +99,7 @@ public class ReplyServiceImpl implements ReplyService{
         }
 
         // 댓글 작성자와 로그인한 회원이 같은지 확인
-        common.checkWriterOrAdmin(reqMember, isReply.get().getMember());
+        common.checkWriterOrAdmin(isReply.get().getMember(), reqMember);
 
         // 삭제 성공
         replyRepository.deleteById(replyId);

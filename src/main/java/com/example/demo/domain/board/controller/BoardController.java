@@ -33,7 +33,6 @@ public class BoardController {
 
     @PostMapping
     public BoardRes registerBoard(@RequestBody @Valid BoardReq registerReq, @RequestHeader(value="Authorization") String bearerToken) {
-//RequestHeader
         String username = jwt.getUsernameFromToken(bearerToken);
         return boardService.registerBoard(username, registerReq);
 

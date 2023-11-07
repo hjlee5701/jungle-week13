@@ -36,8 +36,6 @@ public class BoardServiceImpl implements BoardService {
     public Board getBoardById(Long boardId){
         Optional<Board> isBoard = boardRepository.findById(boardId);
         if(isBoard.isEmpty()){
-
-
             throw new RestApiException(BoardErrorCode.BOARD_NOT_FOUND);
 
         }
@@ -109,7 +107,7 @@ public class BoardServiceImpl implements BoardService {
 
         Board board = getBoardById(boardId);
 
-        common.checkWriterOrAdmin(reqMember, board.getMember());
+        common.checkWriterOrAdmin(board.getMember(), reqMember);
         board.updateBoard( updateReq.getTitle(),
                            updateReq.getContent());
 
@@ -124,7 +122,7 @@ public class BoardServiceImpl implements BoardService {
 
         Board board = getBoardById(boardId);
 
-        common.checkWriterOrAdmin(reqMember, board.getMember());
+        common.checkWriterOrAdmin(board.getMember(), reqMember);
 
         boardRepository.deleteById(boardId);
 
